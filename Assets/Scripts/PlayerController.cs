@@ -1,51 +1,58 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
-    public CharacterController controller;
+    public float walkSpeed = 5f;
+    public float runSpeed = 10f;
+    public float mouseSensitivity = 100f;
+    public Transform playerCamera;
 
-    public float speed = 12f;
-    public float gravity = -9.81f * 2;
-    public float jumpHeight = 3f;
+    private CharacterController characterController;
+    private float verticalSpeed = 0f;
+    private float gravity = -9.81f;
+    private float cameraPitch = 0f;
 
-    public Transform groundCheck;
-    public float groundDistance = 0.4f;
-    public LayerMask groundMask;
+    void Start()
+    {
+        characterController = GetComponent<CharacterController>();
+        Cursor.lockState = CursorLockMode.Locked; // Locks the cursor to the center of the screen
+    }
 
-    Vector3 velocity;
-
-    bool isGrounded;
-
-    // Update is called once per frame
     void Update()
     {
-        //checking if we hit the ground to reset our falling velocity, otherwise we will fall faster the next time
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        MovePlayer();
+        RotateCamera();
+    }
 
-        if (isGrounded && velocity.y < 0)
+    void MovePlayer()
+    {
+        float speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
+
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
+
+        Vector3 move = transform.right * moveX + transform.forward * moveZ;
+        verticalSpeed += gravity * Time.deltaTime;
+
+        Vector3 velocity = move * speed + Vector3.up * verticalSpeed;
+        characterController.Move(velocity * Time.deltaTime);
+
+        if (characterController.isGrounded && verticalSpeed < 0)
         {
-            velocity.y = -2f;
+            verticalSpeed = -2f; // Keeps the player grounded
         }
+    }
 
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
+    void RotateCamera()
+    {
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        //right is the red Axis, foward is the blue axis
-        Vector3 move = transform.right * x + transform.forward * z;
+        cameraPitch -= mouseY;
+        cameraPitch = Mathf.Clamp(cameraPitch, -90f, 90f); // Prevents over-rotation
 
-        controller.Move(move * speed * Time.deltaTime);
-
-        //check if the player is on the ground so he can jump
-        if (Input.GetButtonDown("Jump") && isGrounded)
-        {
-            //the equation for jumping
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-        }
-
-        velocity.y += gravity * Time.deltaTime;
-
-        controller.Move(velocity * Time.deltaTime);
+        playerCamera.localRotation = Quaternion.Euler(cameraPitch, 0f, 0f);
+        transform.Rotate(Vector3.up * mouseX);
     }
 }
+
