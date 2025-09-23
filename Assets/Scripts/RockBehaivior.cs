@@ -9,13 +9,14 @@ public class RockBehaivior : MonoBehaviour
     public float rotationSpeed = 0.2f;
     public int movementType = 0;
 
-  
+    Vector3 lastPosition;
+    public Vector3 Change { get; private set; }
 
     public GameObject rock;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        lastPosition = transform.position;
     }
 
     // Update is called once per frame
@@ -41,5 +42,11 @@ public class RockBehaivior : MonoBehaviour
             transform.localRotation = Quaternion.Euler(0f, 0f, zRotation);
             rock.transform.localRotation = Quaternion.Euler(0f, 0f, -zRotation);
         }
+    }
+
+    void LateUpdate()
+    {
+        Change = transform.position - lastPosition;
+        lastPosition = transform.position;
     }
 }

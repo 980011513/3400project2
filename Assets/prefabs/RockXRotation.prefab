@@ -364,7 +364,7 @@ GameObject:
   - component: {fileID: 2376845721059667100}
   m_Layer: 0
   m_Name: RockXRotation
-  m_TagString: Untagged
+  m_TagString: MovingPlatform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -397,6 +397,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c748ccccf0ce8914ba28e0a2597c5c97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  yRotation: 0
+  xRotation: 0
+  zRotation: 0
   rotationSpeed: 0.2
   movementType: 1
   rock: {fileID: 7327986828488698051}

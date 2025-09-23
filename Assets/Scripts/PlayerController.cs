@@ -28,6 +28,8 @@ public class PlayerMovement : MonoBehaviour
     public GameObject respawnPoint;
     Vector3 position = new Vector3(-0.5f, 1.5f, 4f);
 
+    RockBehaivior currentPlatform;
+
     void Start()
     {
         jetpackEnergy = jetpackMaxEnergy;
@@ -57,6 +59,12 @@ public class PlayerMovement : MonoBehaviour
 
         controller.Move(velocity * Time.deltaTime);
 
+        checkPlatform();
+        if (currentPlatform && controller.isGrounded)
+        {
+            controller.Move(currentPlatform.Change);
+        }
+
         if (hasFallen)
         {
             controller.Move(respawnPoint.transform.position);
@@ -71,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log("Jump");
         }
 
-        if (Input.GetKey(KeyCode.LeftShift) && jetpackEnergy > 0f && !controller.isGrounded)
+        if (Input.GetKey(KeyCode.LeftShift) && jetpackEnergy > 0f)
         {
             Debug.Log("Current energy: " + jetpackEnergy);
             float verticalVelocity = velocity.y;
@@ -84,5 +92,26 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log("Current energy: " + jetpackEnergy);
             jetpackEnergy = Mathf.Min(jetpackMaxEnergy, jetpackEnergy + jetpackRegenRate * Time.deltaTime);
         }
+    }
+
+    void checkPlatform()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.1f))
+        {
+            if (hit.collider.CompareTag("MovingPlatform"))
+                currentPlatform = hit.collider.GetComponent<RockBehaivior>();
+            else
+                currentPlatform = null;
+        }
+        else
+        {
+            currentPlatform = null;
+        }
+    }
+
+    public void StopAllVelocity()
+    {
+        velocity = Vector3.zero;
     }
 }
