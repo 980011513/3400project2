@@ -10,15 +10,28 @@ public class PlayerMovement : MonoBehaviour
     public float gravity = -9.81f * 2;
     public float jumpHeight = 3f;
 
+    public float maxUpSpeed = 7f;
+    public float jetpackMaxEnergy = 100f;
+    public float jetpackBurnRate = 20f;
+    public float jetpackRegenRate = 10f;
+
+
     public Transform respawnCheck;
     public float respawnDistance = 0.1f;
     public LayerMask respawnMask;
 
+    float jetpackEnergy;
     Vector3 velocity;
+
 
     bool hasFallen = false;
     public GameObject respawnPoint;
     Vector3 position = new Vector3(-0.5f, 1.5f, 4f);
+
+    void Start()
+    {
+        jetpackEnergy = jetpackMaxEnergy;
+    }
 
     // Update is called once per frame
     void Update()
@@ -30,7 +43,6 @@ public class PlayerMovement : MonoBehaviour
         if (controller.isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
-            
         }
 
         float x = Input.GetAxis("Horizontal");
@@ -41,13 +53,6 @@ public class PlayerMovement : MonoBehaviour
 
         controller.Move(move * speed * Time.deltaTime);
 
-        //check if the player is on the ground so he can jump
-        if (Input.GetButtonDown("Jump") && controller.isGrounded)
-        {
-            //the equation for jumping
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-        }
-
         velocity.y += gravity * Time.deltaTime;
 
         controller.Move(velocity * Time.deltaTime);
@@ -56,6 +61,28 @@ public class PlayerMovement : MonoBehaviour
         {
             controller.Move(respawnPoint.transform.position);
             Debug.Log("Should Respawn");
+        }
+
+        //check if the player is on the ground so he can jump
+        if (Input.GetButtonDown("Jump") && controller.isGrounded)
+        {
+            //the equation for jumping
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            Debug.Log("Jump");
+        }
+
+        if (Input.GetKey(KeyCode.LeftShift) && jetpackEnergy > 0f && !controller.isGrounded)
+        {
+            Debug.Log("Current energy: " + jetpackEnergy);
+            float verticalVelocity = velocity.y;
+            verticalVelocity = Mathf.Min(verticalVelocity + 200 * Time.deltaTime, maxUpSpeed);
+            velocity.y = verticalVelocity;
+            jetpackEnergy -= jetpackBurnRate * Time.deltaTime;
+        }
+        else if (controller.isGrounded)
+        {
+            Debug.Log("Current energy: " + jetpackEnergy);
+            jetpackEnergy = Mathf.Min(jetpackMaxEnergy, jetpackEnergy + jetpackRegenRate * Time.deltaTime);
         }
     }
 }
