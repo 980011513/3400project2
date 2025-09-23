@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class levelComplete : MonoBehaviour
+public class LevelComplete : MonoBehaviour
 {
     public TMP_Text winText;
 
