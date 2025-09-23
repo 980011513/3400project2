@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     public float respawnDistance = 0.1f;
     public LayerMask respawnMask;
 
-    float jetpackEnergy;
+    public float JetpackEnergy { get; private set; }
     Vector3 velocity;
     float jetpackTime = 0f;
 
@@ -34,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
-        jetpackEnergy = jetpackMaxEnergy;
+        JetpackEnergy = jetpackMaxEnergy;
     }
 
     // Update is called once per frame
@@ -81,19 +81,19 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log("Jump");
         }
 
-        if (Input.GetKey(KeyCode.LeftShift) && jetpackEnergy > 0f && jetpackTime < maxJetpackTime)
+        if (Input.GetKey(KeyCode.LeftShift) && JetpackEnergy > 0f && jetpackTime < maxJetpackTime)
         {
-            Debug.Log("Current energy: " + jetpackEnergy);
+            Debug.Log("Current energy: " + JetpackEnergy);
             float verticalVelocity = velocity.y;
             verticalVelocity = Mathf.Min(verticalVelocity + 200 * Time.deltaTime, maxUpSpeed);
             velocity.y = verticalVelocity;
-            jetpackEnergy -= jetpackBurnRate * Time.deltaTime;
+            JetpackEnergy -= jetpackBurnRate * Time.deltaTime;
             jetpackTime += Time.deltaTime;
         }
         else if (controller.isGrounded)
         {
-            Debug.Log("Current energy: " + jetpackEnergy);
-            jetpackEnergy = Mathf.Min(jetpackMaxEnergy, jetpackEnergy + jetpackRegenRate * Time.deltaTime);
+            Debug.Log("Current energy: " + JetpackEnergy);
+            JetpackEnergy = Mathf.Min(jetpackMaxEnergy, JetpackEnergy + jetpackRegenRate * Time.deltaTime);
             jetpackTime = 0f;
         }
     }
