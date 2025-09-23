@@ -428,8 +428,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 1584845406}
   speed: 12
-  gravity: -0.81
+  gravity: -9.81
   jumpHeight: 3
+  maxUpSpeed: 7
+  jetpackMaxEnergy: 100
+  jetpackBurnRate: 20
+  jetpackRegenRate: 10
   respawnCheck: {fileID: 0}
   respawnDistance: 0.1
   respawnMask:
@@ -560,15 +564,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1584845398}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 28f3c12751c7abc4d9645369f4ce6b2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 1584845406}
-  ascendAccel: 16
+  player: {fileID: 1584845400}
+  ascendAccel: 30
   maxUpSpeed: 7
-  gravity: -20
 --- !u!1 &2052165720
 GameObject:
   m_ObjectHideFlags: 0
