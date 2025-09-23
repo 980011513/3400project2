@@ -3,11 +3,13 @@ using UnityEngine;
 public class RockBehaivior : MonoBehaviour
 {
 
-    float yRotation = 0f;
-    float xRotation = 0f;
-    float zRotation = 0f;
+    public float yRotation;
+    public float xRotation;
+    public float zRotation;
     public float rotationSpeed = 0.2f;
     public int movementType = 0;
+
+  
 
     public GameObject rock;
     // Start is called once before the first execution of Update after the MonoBehaviour is created

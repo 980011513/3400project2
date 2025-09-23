@@ -9,6 +9,7 @@ public class MouseMovement : MonoBehaviour
 
     float xRotation = 0f;
     float YRotation = 0f;
+    public Transform playerCamera;
 
     void Start()
     {
@@ -28,10 +29,8 @@ public class MouseMovement : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         //control rotation around y axis (Look up and down)
-        YRotation += mouseX;
-
-        //applying both rotations
-        transform.localRotation = Quaternion.Euler(xRotation, YRotation, 0f);
+        playerCamera.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        transform.Rotate(Vector3.up * mouseX);
 
     }
 }
