@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     public float jetpackMaxEnergy = 100f;
     public float jetpackBurnRate = 20f;
     public float jetpackRegenRate = 10f;
+    public float maxJetpackTime = 1f;
 
 
     public Transform respawnCheck;
@@ -22,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
 
     float jetpackEnergy;
     Vector3 velocity;
+    float jetpackTime = 0f;
 
 
     bool hasFallen = false;
@@ -79,18 +81,20 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log("Jump");
         }
 
-        if (Input.GetKey(KeyCode.LeftShift) && jetpackEnergy > 0f)
+        if (Input.GetKey(KeyCode.LeftShift) && jetpackEnergy > 0f && jetpackTime < maxJetpackTime)
         {
             Debug.Log("Current energy: " + jetpackEnergy);
             float verticalVelocity = velocity.y;
             verticalVelocity = Mathf.Min(verticalVelocity + 200 * Time.deltaTime, maxUpSpeed);
             velocity.y = verticalVelocity;
             jetpackEnergy -= jetpackBurnRate * Time.deltaTime;
+            jetpackTime += Time.deltaTime;
         }
         else if (controller.isGrounded)
         {
             Debug.Log("Current energy: " + jetpackEnergy);
             jetpackEnergy = Mathf.Min(jetpackMaxEnergy, jetpackEnergy + jetpackRegenRate * Time.deltaTime);
+            jetpackTime = 0f;
         }
     }
 
