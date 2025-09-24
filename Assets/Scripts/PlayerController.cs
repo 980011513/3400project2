@@ -13,8 +13,7 @@ public class PlayerMovement : MonoBehaviour
     public float maxUpSpeed = 7f;
     public float jetpackMaxEnergy = 100f;
     public float jetpackBurnRate = 20f;
-    public float jetpackRegenRate = 10f;
-    public float maxJetpackTime = 1f;
+    // public float jetpackRegenRate = 10f;
 
 
     public Transform respawnCheck;
@@ -61,12 +60,6 @@ public class PlayerMovement : MonoBehaviour
 
         controller.Move(velocity * Time.deltaTime);
 
-        checkPlatform();
-        if (currentPlatform && controller.isGrounded)
-        {
-            controller.Move(currentPlatform.Change);
-        }
-
         if (hasFallen)
         {
             controller.Move(respawnPoint.transform.position);
@@ -81,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log("Jump");
         }
 
-        if (Input.GetKey(KeyCode.LeftShift) && JetpackEnergy > 0f && jetpackTime < maxJetpackTime)
+        if (Input.GetKey(KeyCode.LeftShift) && JetpackEnergy > 0f)
         {
             Debug.Log("Current energy: " + JetpackEnergy);
             float verticalVelocity = velocity.y;
@@ -93,29 +86,7 @@ public class PlayerMovement : MonoBehaviour
         else if (controller.isGrounded)
         {
             Debug.Log("Current energy: " + JetpackEnergy);
-            JetpackEnergy = Mathf.Min(jetpackMaxEnergy, JetpackEnergy + jetpackRegenRate * Time.deltaTime);
-            jetpackTime = 0f;
+            // JetpackEnergy = Mathf.Min(jetpackMaxEnergy, JetpackEnergy + jetpackRegenRate * Time.deltaTime);
         }
-    }
-
-    void checkPlatform()
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.1f))
-        {
-            if (hit.collider.CompareTag("MovingPlatform"))
-                currentPlatform = hit.collider.GetComponent<RockBehaivior>();
-            else
-                currentPlatform = null;
-        }
-        else
-        {
-            currentPlatform = null;
-        }
-    }
-
-    public void StopAllVelocity()
-    {
-        velocity = Vector3.zero;
     }
 }

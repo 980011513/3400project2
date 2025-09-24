@@ -9708,8 +9708,8 @@ MonoBehaviour:
   resultText: {fileID: 434898393}
   oxygen: {fileID: 239451104}
   fuel: {fileID: 781045861}
-  totalOxygenTime: 60
-  playerMovement: {fileID: 0}
+  totalOxygenTime: 30
+  playerMovement: {fileID: 468065076}
 --- !u!1 &407492801
 GameObject:
   m_ObjectHideFlags: 0
